@@ -6,45 +6,47 @@
 //
 
 #include <iostream>
-struct IntStack10 {
+struct IntStack {
+    int top;
     int size;
-    int tab[10];
-    void init(){
-        size = 0;
-        for (int i = 0; i < 10; i++){
-            tab[i] = 0;
-        }
+    int *tab;
+    void init(int new_size){
+        size = new_size;
+        tab = new int[size];
+        top = 0;
     }
     void push(int a){
-        tab[size] = a;
-        size = size + 1;
+        tab[top] = a;
+        top = top + 1;
     }
     int pop(){
-        int out = tab[size - 1];
-        tab[size - 1] = 0;
-        size = size - 1;
+        int out = tab[top - 1];
+        tab[top - 1] = 0;
+        top = top - 1;
         return out;
     }
     void print(){
         std::cout << "[";
-        for (int i = 0; i < size - 1; i++){
+        for (int i = 0; i < top - 1; i++){
             std::cout << tab[i] << " ";
         }
-        std::cout << tab[size - 1] << "]" << std::endl;
+        std::cout << tab[top - 1] << "]" << std::endl;
+        std::cout << "Top : " << top << std::endl;
+    }
+    void free(){
+        delete[] tab;
     }
 };
         
 int main(){
-    IntStack10 pile;
-    pile.init();
-    //pile.print();
-    pile.push(1);
-    //pile.print();
-    pile.push(2);
-    pile.push(4);
-    pile.push(7);
+    IntStack pile;
+    pile.init(30);
+    for (int i = 0; i < 18 ; i++){
+        pile.push(i);
+    }
     pile.print();
     pile.pop();
     pile.print();
+    pile.free();
 }
         
