@@ -10,11 +10,37 @@ struct IntStack {
     int top;
     int size;
     int *tab;
-    void init(int new_size){
+    IntStack(int new_size){
         size = new_size;
         tab = new int[size];
         top = 0;
     }
+    IntStack(const IntStack & intStack){
+        size = intStack.size;
+        tab = new int [size];
+        top = intStack.top;
+        for (int i = 0; i <= top; i++) {
+            tab[i] = intStack.tab[i];
+        }
+    }
+    ~IntStack(){
+        delete[] tab;
+    }
+    IntStack & operator= (const IntStack & auxStack) {
+        if (this == &auxStack) {
+            return *this;
+        }
+        delete [] tab;
+        tab = new int [size];
+        top = auxStack.top;
+        for (int i = 0; i <= top; i++){
+            tab[i] = auxStack.tab[i];
+        }
+        return *this;
+
+        
+    }
+    
     void push(int a){
         tab[top] = a;
         top = top + 1;
@@ -33,20 +59,21 @@ struct IntStack {
         std::cout << tab[top - 1] << "]" << std::endl;
         std::cout << "Top : " << top << std::endl;
     }
-    void free(){
-        delete[] tab;
-    }
 };
         
 int main(){
-    IntStack pile;
-    pile.init(30);
+    IntStack pile1 (30);
+    IntStack pile2 (20);
+    IntStack pile3 (pile1);
     for (int i = 0; i < 18 ; i++){
-        pile.push(i);
+        pile1.push(i);
     }
-    pile.print();
-    pile.pop();
-    pile.print();
-    pile.free();
+    pile2 = pile1;
+    IntStack pile4 (pile1);
+    pile1.print();
+    pile2.print();
+    pile3.print();
+    pile4.print();
+    pile1 = pile1;
 }
         
