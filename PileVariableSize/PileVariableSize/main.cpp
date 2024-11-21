@@ -1,9 +1,10 @@
 //
 //  main.cpp
-//  Pile
+//  PileVariableSize
 //
-//  Created by Pierre-Louis Coppens on 07/11/2024.
+//  Created by Pierre-Louis Coppens on 20/11/2024.
 //
+
 
 #include <iostream>
 struct IntStack {
@@ -30,6 +31,7 @@ struct IntStack {
         if (this == &auxStack) {
             return *this;
         }
+    
         delete [] tab;
         tab = new int [size];
         top = auxStack.top;
@@ -37,20 +39,27 @@ struct IntStack {
             tab[i] = auxStack.tab[i];
         }
         return *this;
+
+        
     }
-    void operator<< (int a) {
-        (*this).push(a);
-    }
-    void operator>> (bool Value) {
-        if (Value){
-            std::cout << tab[top-1] << std::endl;
+    void change(int new_size){
+        IntStack stock_pile (*this);
+        delete [] tab;
+        size = new_size;
+        tab = new int [size];
+        for (int i = 0; i <= top; i++) {
+            tab[i] = stock_pile.tab[i];
         }
-        (*this).pop();
     }
-    
     void push(int a){
-        tab[top] = a;
-        top = top + 1;
+        if (top < size){
+            tab[top] = a;
+            top = top + 1;
+        }
+        else {
+            (*this).change(size*2);
+            (*this).push(a);
+        }
     }
     int pop(){
         int out = tab[top - 1];
@@ -65,22 +74,31 @@ struct IntStack {
         }
         std::cout << tab[top - 1] << "]" << std::endl;
         std::cout << "Top : " << top << std::endl;
+        std::cout << "Size : " << size << std::endl;
+        std::cout << "Loc : " << &tab << std::endl;
+    }
+    //Getter
+    int & get_value(int a){
+        if (a < top){
+            return tab[a];
+        }
+        else{
+            std::cout << "Index out of range" << size << std::endl;
+            return tab[0];
+        }
+    }
+    int get_top(){
+        return top;
     }
 };
         
 int main(){
-    IntStack pile1 (30);
-    IntStack pile2 (20);
-    IntStack pile3 (pile1);
-    for (int i = 0; i < 18 ; i++){
+    IntStack pile1 (10);
+    for (int i = 0; i < 10 ; i++){
         pile1.push(i);
     }
-    pile2 = pile1;
-    IntStack pile4 (pile1);
     pile1.print();
-    pile2.print();
-    pile3.print();
-    pile4.print();
-    pile1 = pile1;
+    pile1.push(42);
+    pile1.print();
 }
         
